@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-coap-deployment
+  namespace: backend-dev
+  labels:
+    app: backend-coap
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-coap
+  template:
+    metadata:
+      labels:
+        app: backend-coap
+    spec:
+      containers:
+      - name: mentor-backend-coap
+        image: andhy2502/mentor-backend-coap:v.1.2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5683
+          protocol: UDP
+        volumeMounts:
+        - name: backend-conf-files
+          mountPath: /usr/src/mentorCOAP/config.js
+          subPath: config.js
+      volumes:
+      - name: backend-conf-files
+        configMap:
+          name: backend-conf

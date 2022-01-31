@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: backend-dev
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: mentor-backend
+        image: andhy2502/mentor-backend:v.1.1
+        volumeMounts:
+        - name: backend-conf-files
+          mountPath: /usr/src/app/config.js
+          subPath: config.js
+        ports:
+        - containerPort: 3001
+      volumes:
+      - name: backend-conf-files
+        configMap:
+          name: backend-conf

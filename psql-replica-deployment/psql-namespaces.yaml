@@ -1,0 +1,10 @@
+{
+  "apiVersion": "v1",
+  "kind": "Namespace",
+  "metadata": {
+    "name": "psql-dev",
+    "labels": {
+      "name": "psql-dev"
+    }
+  }
+}

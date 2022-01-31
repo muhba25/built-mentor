@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nfs-nginx
+  namespace: nfsc-provisioner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: nginx-volume
+          persistentVolumeClaim:
+            claimName: pvc1
+      containers:
+        - image: nginx
+          name: nginx
+          volumeMounts:
+            - name: nginx-volume
+              mountPath: /usr/share/nginx/html

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-mqtt-deployment
+  namespace: backend-dev
+  labels:
+    app: backend-mqtt
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-mqtt
+  template:
+    metadata:
+      labels:
+        app: backend-mqtt
+    spec:
+      containers:
+      - name: mentor-backend-mqtt
+        image: andhy2502/mentor-backend-mqtt:v.1.4
+        ports:
+        - containerPort: 8883
+        volumeMounts:
+        - name: backend-conf-files
+          mountPath: /usr/src/mentorMQTT/config.js
+          subPath: config.js
+      volumes:
+      - name: backend-conf-files
+        configMap:
+          name: backend-conf

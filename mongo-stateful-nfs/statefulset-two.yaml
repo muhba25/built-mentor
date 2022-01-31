@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo1
+  namespace: mongo-dev
+spec:
+  serviceName: "mongo"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+        selector: mongo
+        role: mongo
+        environment: test
+    spec:
+      hostname: mongo
+      containers:
+      - env:
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: MONGO_PASSWORD        
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: MONGO_USERNAME
+        name: mongo1
+        image: mongo:4.2
+        command:
+          - mongod
+          - "--replSet"
+          - rs0
+          - "--bind_ip_all"
+        ports:
+          - containerPort: 27017
+        volumeMounts:
+          - name: task-pv-claim
+            mountPath: /data/db
+      nodeSelector:
+        mesin: worker02
+      volumes: 
+      - name: task-pv-claim
+        persistentVolumeClaim:
+          claimName: pvc-mongo2
+      

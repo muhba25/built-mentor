@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: mongo-dev
+  labels:
+    name: mongo
+spec:
+  ports:
+    - port: 27017
+      protocol: TCP
+  selector:
+    app: mongo
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-master
+  namespace: mongo-dev
+spec:
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: mongo-master
+  namespace: mongo-dev
+subsets:
+  - addresses:
+      - ip: <POD-IP-MASTER>
+    ports:
+      - port: 27017
+
+## OR Using Node Service Nodeport
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: mongo2
+#   namespace: mongo-dev
+#   labels:
+#     name: mongo2
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 27017
+#   selector:
+#     app: mongo2

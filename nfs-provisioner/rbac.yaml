@@ -1,0 +1,61 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: nfsc-provisioner-sa
+  namespace: nfsc-provisioner
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nfsc-provisioner-cr
+  namespace: nfsc-provisioner
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nfsc-provisioner-crb
+  namespace: nfsc-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: nfsc-provisioner-sa
+    namespace: nfsc-provisioner
+roleRef:
+  kind: ClusterRole
+  name: nfsc-provisioner-cr
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nfsc-provisioner-role
+  namespace: nfsc-provisioner
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nfsc-provisioner-role
+subjects:
+  - kind: ServiceAccount
+    name: nfsc-provisioner-sa
+    namespace: nfsc-provisioner
+roleRef:
+  kind: Role
+  name: nfsc-provisioner-role
+  apiGroup: rbac.authorization.k8s.io

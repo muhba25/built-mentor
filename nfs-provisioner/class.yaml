@@ -1,0 +1,8 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfsc-storage-sc
+  namespace: nfsc-provisioner
+provisioner: example.com/nfs
+parameters:
+  archiveOnDelete: "false"

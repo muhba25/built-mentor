@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-mongo2
+  namespace: mongo-dev
+spec:
+  storageClassName: mongo1
+  volumeMode: Filesystem
+  accessModes:
+   - ReadWriteOnce
+  capacity:
+   storage: 20Gi
+  nfs:
+   path: /mnt/kube_file/mongo1
+   server: 10.10.25.16
+

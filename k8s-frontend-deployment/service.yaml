@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: frontend-dev
+  labels:
+    app: frontend
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      name: http-frontend
+      nodePort: 30255
+  selector:
+    app: frontend
+
+#port for clusterIP
+#targetport for podIP

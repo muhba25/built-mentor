@@ -1,0 +1,36 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-client-provisioner
+  namespace: nfsc-provisioner
+spec:
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfsc-provisioner-sa
+      containers:
+        - name: nfs-client-provisioner
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: example.com/nfs
+            - name: NFS_SERVER
+              value: 10.10.25.16
+            - name: NFS_PATH
+              value: /mnt/kube_file
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 10.10.25.16
+            path: /mnt/kube_file

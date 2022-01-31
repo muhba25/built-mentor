@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: frontend-dev
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: mentor-frontend
+        image: andhy2502/mentor-frontend-console:v.1.8
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: frontend-conf-files
+          mountPath: /usr/src/app/config.js
+          subPath: config.js
+      volumes:
+      - name: frontend-conf-files
+        configMap:
+          name: frontend-conf

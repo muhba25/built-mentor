@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: backend-dev
+  labels:
+    app: backend
+spec:
+  type: NodePort
+  ports:
+    - port: 3000  
+      name: intra-backend
+      nodePort: 30241
+    - port: 3443
+      name: tls-intra-backend
+      nodePort: 31617
+  selector:
+    app: backend
+
+#port for clusterIP
+#targetport for podIP
